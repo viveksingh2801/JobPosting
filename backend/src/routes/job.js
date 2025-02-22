@@ -1,6 +1,6 @@
 const express = require("express");
 const jobRouter = express.Router();
-const Job = require("../models/Job");
+const Job = require("../models/job");
 const jwt = require("jsonwebtoken");
 const { userAuth } = require("../middlewares/auth");
 const jwtSecret = process.env.JWT_SECRET;
