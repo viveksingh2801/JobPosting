@@ -1,13 +1,14 @@
 const express = require("express");
 const mongoose = require("mongoose");
+require("dotenv").config(); 
 const cors = require("cors");
-const dotenv = require("dotenv");
+// const dotenv = require("dotenv");
 const authRouter = require("./src/routes/auth");
 const jobRouter = require("./src/routes/job");
 const connectDB = require("./src/config/database");
 const cookieParser = require("cookie-parser");
 
-require("dotenv").config();  
+ 
 
 const app = express();
 const port = process.env.PORT || 5000;
