@@ -7,7 +7,7 @@ const jobRouter = require("./src/routes/job");
 const connectDB = require("./src/config/database");
 const cookieParser = require("cookie-parser");
 
-dotenv.config();  
+require("dotenv").config();  
 
 const app = express();
 const port = process.env.PORT || 5000;
