@@ -5,12 +5,11 @@ const jwt = require("jsonwebtoken");
 const { userAuth } = require("../middlewares/auth");
 const jwtSecret = process.env.JWT_SECRET;
 
-// Post a job (requires authentication)
 jobRouter.post("/job/add", userAuth, async (req, res) => {
   try {
     const job = new Job({
       ...req.body,
-      postedBy: req.user._id, // Use the user ID from the token
+      postedBy: req.user._id,
     });
 
     const savedJob = await job.save();
