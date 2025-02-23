@@ -45,7 +45,7 @@ const JobForm = () => {
       navigate("/");
     } catch (error) {
       console.error(error.response.data);
-      alert(error.response.data.message);
+      alert(error?.response?.data?.message || "An error occurred");
     }
   };
 

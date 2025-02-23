@@ -2,10 +2,10 @@ const express = require("express");
 const jobRouter = express.Router();
 const Job = require("../models/job");
 const jwt = require("jsonwebtoken");
-const { userAuth, optionalUserAuth } = require("../middlewares/auth");
+const { userAuth } = require("../middlewares/auth");
 const jwtSecret = process.env.JWT_SECRET;
 
-jobRouter.post("/job/add", optionalUserAuth, async (req, res) => {
+jobRouter.post("/job/add", userAuth, async (req, res) => {
   try {
     const job = new Job({
       ...req.body,
@@ -47,7 +47,7 @@ jobRouter.get("/job/:id", async (req, res) => {
 });
 
  
-jobRouter.patch("/job/edit/:id", optionalUserAuth, async (req, res) => {
+jobRouter.patch("/job/edit/:id", userAuth, async (req, res) => {
   try {
     let job = await Job.findById(req.params.id);
     if (!job) return res.status(404).json({ message: "Job not found" });
@@ -68,7 +68,7 @@ jobRouter.patch("/job/edit/:id", optionalUserAuth, async (req, res) => {
   }
 });
 
-jobRouter.get("/search", optionalUserAuth, async (req, res) => {
+jobRouter.get("/search", async (req, res) => {
   try {
     const { searchTerm, skills } = req.query;
     let query = {};
