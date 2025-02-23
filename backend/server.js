@@ -10,7 +10,7 @@ const cookieParser = require("cookie-parser");
 const app = express();
 const port = process.env.PORT || 5000;
 
-Middleware;
+// Middleware
 app.use(
   cors({
     origin: "https://jobposting-frontend-t4io.onrender.com",
