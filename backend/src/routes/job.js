@@ -2,10 +2,11 @@ const express = require("express");
 const jobRouter = express.Router();
 const Job = require("../models/job");
 const jwt = require("jsonwebtoken");
-const { userAuth } = require("../middlewares/auth");
+// const { userAuth } = require("../middlewares/auth");
 const jwtSecret = process.env.JWT_SECRET;
+const { optionalUserAuth } = require("../middlewares/auth");
 
-jobRouter.post("/job/add", userAuth, async (req, res) => {
+jobRouter.post("/job/add", optionalUserAuth, async (req, res) => {
   try {
     const job = new Job({
       ...req.body,
@@ -23,7 +24,9 @@ jobRouter.post("/job/add", userAuth, async (req, res) => {
 // Get all jobs (publicly accessible)
 jobRouter.get("/feed", async (req, res) => {
   try {
-    const jobs = await Job.find().sort({ createdAt: -1 }).populate('postedBy', 'name email');;
+    const jobs = await Job.find()
+      .sort({ createdAt: -1 })
+      .populate("postedBy", "name email");
     res.json(jobs);
   } catch (err) {
     console.error(err.message);
@@ -46,8 +49,8 @@ jobRouter.get("/job/:id", async (req, res) => {
 });
 
 //Edit job
-jobRouter.patch("/job/edit/:id", userAuth, async (req, res) => {
-  try { 
+jobRouter.patch("/job/edit/:id", optionalUserAuth, async (req, res) => {
+  try {
     let job = await Job.findById(req.params.id);
     if (!job) return res.status(404).json({ message: "Job not found" });
 
@@ -68,45 +71,77 @@ jobRouter.patch("/job/edit/:id", userAuth, async (req, res) => {
 });
 
 // 🔍 Search & Filter Jobs
-jobRouter.get("/search", async (req, res) => {
-  try {
-    const {
-      searchTerm,
-      skills,
-      page = 1,
-      limit = 10,
-      sort = "createdAt",
-    } = req.query;
+// jobRouter.get("/search", async (req, res) => {
+//   try {
+//     const { searchTerm, skills } = req.query;
 
+//     let query = {};
+
+//     // 🔍 1️⃣ Search by Company, Position, or Location
+//     if (searchTerm) {
+//       query.$or = [
+//         { companyName: { $regex: searchTerm, $options: "i" } },
+//         { jobPosition: { $regex: searchTerm, $options: "i" } },
+//         { location: { $regex: searchTerm, $options: "i" } },
+//       ];
+//     }
+
+//     // 🎯 2️⃣ Filter by Skills (Array Match)
+//     if (skills) {
+//       const skillsArray = skills
+//         .split(",")
+//         .map((skill) => new RegExp(skill.trim(), "i"));
+//       query.skillsRequired = { $in: skillsArray };
+//     }
+//   } catch (error) {
+//     console.error("Search Error:", error);
+//     res.status(500).json({ message: "Server Error" });
+//   }
+// });
+
+jobRouter.get("/search", optionalUserAuth, async (req, res) => {
+  try {
+    const { searchTerm, skills } = req.query;
     let query = {};
 
-    // 🔍 1️⃣ Search by Company, Position, Description, or Location
+    // 🔍 Search by Company, Position, or Location
     if (searchTerm) {
       query.$or = [
         { companyName: { $regex: searchTerm, $options: "i" } },
         { jobPosition: { $regex: searchTerm, $options: "i" } },
-        // { jobDescription: { $regex: searchTerm, $options: "i" } },
         { location: { $regex: searchTerm, $options: "i" } },
       ];
     }
 
-    // 🎯 2️⃣ Filter by Skills (Array Match)
+    // 🎯 Filter by Skills (All skills must match)
     if (skills) {
-      const skillsArray = skills
-        .split(",")
-        .map((skill) => new RegExp(skill.trim(), "i"));
-      query.skillsRequired = { $in: skillsArray };
+      const skillsArray = skills.split(",").map((skill) => skill.trim());
+      query.skillsRequired = { $all: skillsArray };
     }
 
-    // 🚀 3️⃣ Pagination & Sorting
-    const jobs = await Job.find(query)
-      .sort({ [sort]: -1 }) // Sort by createdAt (descending order)
-      .skip((page - 1) * limit)
-      .limit(Number(limit));
+    if (req.user && req.user._id) {
+      query.postedBy = req.user._id;
+      console.log("Searching only own jobs for:", req.user.name);
+    } else {
+      console.log("Searching all available jobs.");
+      // No additional filtering needed for logged-out users.
+    }
 
-    res.json(jobs);
+    const jobs = await Job.find(query);
+
+    res.status(200).json(jobs);
   } catch (error) {
     console.error("Search Error:", error);
+    res.status(500).json({ message: "Server Error" });
+  }
+});
+
+jobRouter.get("/skills", async (req, res) => {
+  try {
+    const skills = await Job.distinct("skillsRequired");
+    res.status(200).json(skills);
+  } catch (error) {
+    console.error("Error fetching skills:", error);
     res.status(500).json({ message: "Server Error" });
   }
 });

@@ -1,16 +1,18 @@
 import axios from "axios";
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addUser } from "../utils/userSlice";
 import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "../utils/constants";
 
 const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("vicky@gmail.com");
+  const [password, setPassword] = useState("28@Vicky");
   const [error, setError] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const allJobs = useSelector((store) => store.feed);
+  console.log(allJobs);
 
   const handleLogin = async () => {
     try {
@@ -56,7 +58,9 @@ const Login = () => {
           className="w-[590px] h-[50px] pl-6 absolute top-[340px] left-[60px] rounded-[5px] border-2 border-[#C2C2C2] bg-white px-4 text-gray-700"
         />
 
-        <p className="text-red-500 w-[610px] absolute top-[240px] left-[60px] text-sm">{error}</p>
+        <p className="text-red-500 w-[610px] absolute top-[240px] left-[60px] text-sm">
+          {error}
+        </p>
 
         <button
           onClick={handleLogin}
@@ -89,4 +93,3 @@ const Login = () => {
 };
 
 export default Login;
- 

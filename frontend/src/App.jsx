@@ -7,7 +7,7 @@ import Home from "./components/Home";
 import SignUp from "./components/SignUp";
 import JobForm from "./components/JobForm";
 import EditJob from "./components/EditJob";
-import JobDetails from "./components/JobDetails";
+import JobDetails from "./components/JobDetails"; 
 
 function App() {
   return (
@@ -21,7 +21,7 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/add" element={<JobForm />} />
               <Route path="/edit/:id" element={<EditJob />} />
-              <Route path="/details/:id" element={<JobDetails />} />
+              <Route path="/details/:id" element={<JobDetails />} /> 
             </Route>
           </Routes>
         </BrowserRouter>

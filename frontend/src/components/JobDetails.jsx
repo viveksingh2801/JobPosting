@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { BASE_URL } from "../utils/constants";
 import { useSelector } from "react-redux";
@@ -8,6 +8,7 @@ const JobDetails = () => {
   const { id } = useParams(); // ✅ Extracting job ID from URL
   const [job, setJob] = useState(null);
   const user = useSelector((store) => store.user);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchJobDetails = async () => {
@@ -24,7 +25,7 @@ const JobDetails = () => {
   if (!job) return <div className="text-center mt-10">Loading...</div>;
 
   return (
-    <div className="w-[899px] h-screen mx-auto p-6 shadow-2xl rounded-lg mt-10">
+    <div className="w-[899px] h-[1100px] mx-auto p-6 shadow-2xl rounded-lg mt-10">
       <p className="text-[#999999] text-sm font-medium font-sans m-2 inline">
         {(() => {
           const createdDate = new Date(job.createdAt);

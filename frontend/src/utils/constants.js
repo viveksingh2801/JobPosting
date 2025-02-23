@@ -1,3 +1,3 @@
-// export const BASE_URL = "http://localhost:5000";
-
-export const BASE_URL = "https://jobposting-d4yl.onrender.com";
+export const BASE_URL = window.location.hostname === "localhost"
+  ? "http://localhost:5000"
+  : "https://jobposting-d4yl.onrender.com";

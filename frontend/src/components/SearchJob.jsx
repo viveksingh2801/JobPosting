@@ -12,9 +12,12 @@ const SearchJob = () => {
     if (!query) return;
 
     try {
-      const res = await axios.get(`${BASE_URL}/search?searchTerm=${query}`, { withCredentials: true });
-      console.log(res.data)
-   
+      const res = await axios.get(
+        `${BASE_URL}/search?searchTerm=${query}`,
+        {},
+        { withCredentials: true }
+      );
+
       if (res.status === 200) {
         dispatch(addFeed(res.data)); // API response ko Redux store me update karenge
       }
@@ -32,7 +35,12 @@ const SearchJob = () => {
   return (
     <div className="flex items-center gap-2 border border-gray-300 p-2 rounded-lg w-[900px] m-auto mb-6">
       <span className="text-gray-400 cursor-pointer">
-        <img onClick={handleSearch} className="w-[20px] h-[20px] brightness-5 opacity-50" src="/assets/search_icon.png" alt="" />
+        <img
+          onClick={handleSearch}
+          className="w-[20px] h-[20px] brightness-5 opacity-50"
+          src="/assets/search_icon.png"
+          alt=""
+        />
       </span>
       <input
         type="text"
@@ -47,3 +55,4 @@ const SearchJob = () => {
 };
 
 export default SearchJob;
+ 
