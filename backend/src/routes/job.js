@@ -2,9 +2,8 @@ const express = require("express");
 const jobRouter = express.Router();
 const Job = require("../models/job");
 const jwt = require("jsonwebtoken");
-// const { userAuth } = require("../middlewares/auth");
+const { userAuth, optionalUserAuth } = require("../middlewares/auth");
 const jwtSecret = process.env.JWT_SECRET;
-const { optionalUserAuth } = require("../middlewares/auth");
 
 jobRouter.post("/job/add", optionalUserAuth, async (req, res) => {
   try {
@@ -20,8 +19,7 @@ jobRouter.post("/job/add", optionalUserAuth, async (req, res) => {
     res.status(500).send("Server error");
   }
 });
-
-// Get all jobs (publicly accessible)
+ 
 jobRouter.get("/feed", async (req, res) => {
   try {
     const jobs = await Job.find()
@@ -34,7 +32,7 @@ jobRouter.get("/feed", async (req, res) => {
   }
 });
 
-//Get job by ID
+ 
 jobRouter.get("/job/:id", async (req, res) => {
   try {
     const job = await Job.findById(req.params.id);
@@ -48,7 +46,7 @@ jobRouter.get("/job/:id", async (req, res) => {
   }
 });
 
-//Edit job
+ 
 jobRouter.patch("/job/edit/:id", optionalUserAuth, async (req, res) => {
   try {
     let job = await Job.findById(req.params.id);
@@ -70,41 +68,12 @@ jobRouter.patch("/job/edit/:id", optionalUserAuth, async (req, res) => {
   }
 });
 
-// 🔍 Search & Filter Jobs
-// jobRouter.get("/search", async (req, res) => {
-//   try {
-//     const { searchTerm, skills } = req.query;
-
-//     let query = {};
-
-//     // 🔍 1️⃣ Search by Company, Position, or Location
-//     if (searchTerm) {
-//       query.$or = [
-//         { companyName: { $regex: searchTerm, $options: "i" } },
-//         { jobPosition: { $regex: searchTerm, $options: "i" } },
-//         { location: { $regex: searchTerm, $options: "i" } },
-//       ];
-//     }
-
-//     // 🎯 2️⃣ Filter by Skills (Array Match)
-//     if (skills) {
-//       const skillsArray = skills
-//         .split(",")
-//         .map((skill) => new RegExp(skill.trim(), "i"));
-//       query.skillsRequired = { $in: skillsArray };
-//     }
-//   } catch (error) {
-//     console.error("Search Error:", error);
-//     res.status(500).json({ message: "Server Error" });
-//   }
-// });
-
 jobRouter.get("/search", optionalUserAuth, async (req, res) => {
   try {
     const { searchTerm, skills } = req.query;
     let query = {};
 
-    // 🔍 Search by Company, Position, or Location
+  
     if (searchTerm) {
       query.$or = [
         { companyName: { $regex: searchTerm, $options: "i" } },
@@ -113,7 +82,7 @@ jobRouter.get("/search", optionalUserAuth, async (req, res) => {
       ];
     }
 
-    // 🎯 Filter by Skills (All skills must match)
+   
     if (skills) {
       const skillsArray = skills.split(",").map((skill) => skill.trim());
       query.skillsRequired = { $all: skillsArray };
@@ -124,7 +93,7 @@ jobRouter.get("/search", optionalUserAuth, async (req, res) => {
       console.log("Searching only own jobs for:", req.user.name);
     } else {
       console.log("Searching all available jobs.");
-      // No additional filtering needed for logged-out users.
+      
     }
 
     const jobs = await Job.find(query);

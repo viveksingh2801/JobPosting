@@ -12,9 +12,9 @@ const jobSchema = new mongoose.Schema({
     aboutCompany: { type: String },
     skillsRequired: { type: [String] }, // Array of skills
     additionalInformation: { type: String },
-    postedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true } // Reference to the user who posted the job
+    postedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }  
 }, {
-    timestamps: true // Adds createdAt and updatedAt fields
+    timestamps: true  
 });
 
 module.exports = mongoose.model('Job', jobSchema);

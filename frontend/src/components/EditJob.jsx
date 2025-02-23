@@ -205,16 +205,16 @@ const EditJob = () => {
             />
           </div>
           <button
-            className="w-36 bg-[#ED5353] text-white p-2 ml-96 rounded-md hover:bg-blue-600"
+            className="w-36 bg-[#ED5353] text-white p-2 ml-96 rounded-md"
             type="submit"
           >
             Update Job
           </button>
         </form>
       </div>
-      <div className="flex justify-center items-center">
+      <div className="flex justify-center items-center mt-[184px]">
         <img
-          className="w-[590px] h-[700px] mt-[3px]"
+          className="w-[620px] h-[880px] mt-[3px]"
           src={"/assets/addjob.jpg"}
           alt=""
         />

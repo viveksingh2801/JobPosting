@@ -5,7 +5,7 @@ import { BASE_URL } from "../utils/constants";
 import { useSelector } from "react-redux";
 
 const JobDetails = () => {
-  const { id } = useParams(); // ✅ Extracting job ID from URL
+  const { id } = useParams(); //Extracting job ID from URL
   const [job, setJob] = useState(null);
   const user = useSelector((store) => store.user);
   const navigate = useNavigate();

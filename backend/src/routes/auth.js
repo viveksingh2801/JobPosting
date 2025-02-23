@@ -5,8 +5,7 @@ const { validateSignUpData } = require("../utils/validation");
 const bcrypt = require("bcrypt");
 
 authRouter.post("/signup", async (req, res) => {
-  try {
-    //Validation of data
+  try { 
     validateSignUpData(req);
     const { name, email, mobile, password } = req.body;
 
@@ -31,8 +30,7 @@ authRouter.post("/signup", async (req, res) => {
 authRouter.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
-
-    // Check if the email and password are provided
+ 
     if (!email || !password) {
       return res.status(400).send("Email and password are required.");
     }
